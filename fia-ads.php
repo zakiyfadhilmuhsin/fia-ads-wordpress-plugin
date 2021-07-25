@@ -12,3 +12,14 @@ require_once plugin_dir_path(__FILE__) . 'includes/core-functions.php';
 
 // Tambah Function XML Generator
 require_once plugin_dir_path(__FILE__) . 'includes/xml-generator/xml-generator.php';
+
+// Updater Plugin
+require 'plugin-update-checker/plugin-update-checker.php';
+$myUpdateChecker = Puc_v4_Factory::buildUpdateChecker(
+	'https://github.com/zakiyfadhilmuhsin/fia-ads-wordpress-plugin/',
+	__FILE__,
+	'fia-ads-wordpress-plugin'
+);
+
+//Set the branch that contains the stable release.
+$myUpdateChecker->setBranch('main');
