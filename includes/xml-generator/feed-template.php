@@ -24,16 +24,30 @@ function ads_inside_content( $content ) {
 		$output = '';
 
 		foreach( $p_array as $key=>$value ){
-			$start_paragraph = '';
-			if($key !== 0) {
-				$start_paragraph = '<p>';
-			}
-			if($key === 8) {
-				$output .= str_replace('</p>', '', $value);
+			/* Cari tag Iframe dan Hilangkan tag paragraph */
+			$element = '';
+			if(preg_match("/<iframe/i", $value) || preg_match("/<figure/i", $value)) {
+				$element = str_replace('</p>', '', $value);
 			}else{
-				$output .= $start_paragraph . $value;
+				if($key !== 0) {
+					$element = '<p>' . $value;
+				}
 			}
+
+			/* Masukkan Iklan ditengah */
+			$output .= $element;
+			// $start_paragraph = '';
+			// if($key !== 0) {
+			// 	$start_paragraph = '<p>';
+			// }
+			// if($key === 8) {
+			// 	$output .= str_replace('</p>', '', $value);
+			// }else{
+			// 	$output .= $start_paragraph . $value;
+			// }
 		}
+
+		//print_r($p_array);
 	}
 
     return $output;
@@ -74,15 +88,37 @@ function ads_inside_content( $content ) {
 							<body>
 								<article>
 									<header>
+										<?php 
+											if ( has_post_thumbnail() ) {
+												$image = wp_get_attachment_image_src( get_post_thumbnail_id( get_the_ID() ) );
+												?>
+													<!-- The cover image shown inside your article --> 
+													<figure>
+													<img src="<?php echo $image[0]; ?>" />
+													</figure>
+												<?php
+											}
+										?>
+
+										<!--Title shown in your Instant Article -->
 										<h1><?php echo esc_html( the_title() ); ?></h1>
+
+										<!-- The date and time when your article was originally published -->
 										<time class="op-published" datetime="<?php $pubDate = new DateTime( get_the_date( 'Y-m-d H:i:s', true, get_the_ID() ), $date_timezone ); echo esc_html( $pubDate->format('c') ); ?>"><?php echo esc_html( $pubDate->format('Y-m-d H:i:s') ); ?></time>
+										
+										<!-- The date and time when your article was last updated -->
 										<time class="op-modified" datetime="<?php $modDate = new DateTime( get_post_modified_time( 'Y-m-d H:i:s', true, get_the_ID() ), $date_timezone ); echo esc_html( $modDate->format('c') ); ?>"><?php echo esc_html( $modDate->format('Y-m-d H:i:s') ); ?></time>
+										
+										<!-- The authors of your article -->
 										<address><?php echo esc_html( the_author_link() ); ?></address>
+
+										<!-- A kicker for your article --> 
 										<h3 class="op-kicker">
 											<?php foreach((get_the_category()) as $category) { 
 												echo $category->cat_name; 
 											}  ?>
 										</h3>
+
 										<!-- Kode iklan facebook audiense network (auto ads)-->
 										<figure class="op-ad">
 											<iframe src="https://www.facebook.com/adnw_request?placement=<?php echo get_option('facebook_audience_network'); ?>&adtype=banner300x250" width="300" height="250"></iframe>
