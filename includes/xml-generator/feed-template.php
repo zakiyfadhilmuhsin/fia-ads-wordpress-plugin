@@ -26,7 +26,7 @@ function ads_inside_content( $content ) {
 		foreach( $p_array as $key=>$value ){
 			/* Cari tag Iframe dan Hilangkan tag paragraph */
 			$element = '';
-			if(preg_match("/<iframe/i", $value) || preg_match("/<figure/i", $value)) {
+			if(preg_match("/<iframe/i", $value) || preg_match("/<figure/i", $value) || preg_match("/<img/i", $value)) {
 				$element = str_replace('</p>', '', $value);
 			}else{
 				if($key !== 0) {
